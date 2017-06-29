@@ -29,10 +29,6 @@
         },
         "files": [
             "src/Http/helpers.php"
-        ],
-        "classmap": [
-            "tests/DuskTestCase.php",
-            "tests/Browser/CreatesApplication.php"
         ]
     },
     "minimum-stability": "dev"
