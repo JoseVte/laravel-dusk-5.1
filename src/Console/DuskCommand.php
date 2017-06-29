@@ -2,7 +2,7 @@
 
 namespace Laravel\Dusk\Console;
 
-use Laravel\Dotenv\Dotenv;
+use Laravel\Dusk\Dotenv;
 use Illuminate\Console\Command;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\ProcessBuilder;

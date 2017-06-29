@@ -29,9 +29,7 @@
         },
         "files": [
             "src/Http/helpers.php"
-        ]
-    },
-    "autoload-dev": {
+        ],
         "classmap": [
             "tests/DuskTestCase.php",
             "tests/Browser/CreatesApplication.php"
