@@ -376,7 +376,11 @@ class Browser
                 break;
         }
 
-        $this->driver->switchTo()->defaultContent()->switchTo()->frame($frame);
+        if ($frame) {
+            $this->driver->switchTo()->defaultContent()->switchTo()->frame($frame);
+        } else {
+            $this->driver->switchTo()->defaultContent();
+        }
 
         return $this;
     }

@@ -83,6 +83,7 @@ trait InteractsWithElements
      *
      * @param  string  $selector
      * @param  string|null  $value
+     * 
      * @return $this
      */
     public function value($selector, $value = null)
@@ -104,6 +105,7 @@ trait InteractsWithElements
      * Get the text of the element matching the given selector.
      *
      * @param  string  $selector
+     *
      * @return string
      */
     public function text($selector)
@@ -116,6 +118,7 @@ trait InteractsWithElements
      *
      * @param  string  $selector
      * @param  string  $attribute
+     *
      * @return string
      */
     public function attribute($selector, $attribute)
@@ -128,6 +131,7 @@ trait InteractsWithElements
      *
      * @param  string  $selector
      * @param  dynamic  $keys
+     *
      * @return $this
      */
     public function keys($selector, ...$keys)
@@ -141,6 +145,7 @@ trait InteractsWithElements
      * Parse the keys before sending to the keyboard.
      *
      * @param  array  $keys
+     *
      * @return array
      */
     protected function parseKeys($keys)
@@ -163,6 +168,7 @@ trait InteractsWithElements
      *
      * @param  string  $field
      * @param  string  $value
+     *
      * @return $this
      */
     public function type($field, $value)
@@ -177,6 +183,7 @@ trait InteractsWithElements
      *
      * @param  string  $field
      * @param  string  $value
+     *
      * @return $this
      */
     public function append($field, $value)
@@ -190,6 +197,7 @@ trait InteractsWithElements
      * Clear the given field.
      *
      * @param  string  $field
+     *
      * @return $this
      */
     public function clear($field)
@@ -204,6 +212,7 @@ trait InteractsWithElements
      *
      * @param  string  $field
      * @param  string  $value
+     *
      * @return $this
      */
     public function select($field, $value = null)
@@ -230,10 +239,54 @@ trait InteractsWithElements
     }
 
     /**
+     * Select the given value or random value of a drop-down field using Select2.
+     *
+     * @param  string        $field selector, or @element
+     * @param  array|string  $value option value, may be multiple, eg. ['foo', 'bar']
+     * @param  int           $wait  count of seconds for ajax loading.
+     *
+     * @return Browser
+     */
+    public function select2($field, $value = null, $wait = 2)
+    {
+        $this->click($field);
+
+        // if $value equal null, find random element and click him.
+        if ($value === null) {
+            $this->waitFor('.select2-results__options .select2-results__option--highlighted');
+            $this->script(join('', [
+                "var _dusk_s2_elements = document.querySelectorAll('.select2-results__options .select2-results__option');",
+                "document.querySelector('.select2-results__options .select2-results__option--highlighted').classList.remove('select2-results__option--highlighted');",
+                'var _dusk_s2_el = _dusk_s2_elements[Math.floor(Math.random()*(_dusk_s2_elements.length - 1))];',
+                "_dusk_s2_el.classList.add('select2-results__option--highlighted');"
+            ]));
+            $this->click('.select2-results__option--highlighted');
+
+            return $this;
+        }
+
+        // check if search field exists and fill it.
+        if ($element = $this->element('.select2-container .select2-search__field')) {
+            foreach ((array) $value as $item) {
+                $element->sendKeys($item);
+                sleep($wait);
+                $this->click('.select2-results__option--highlighted');
+            }
+            return $this;
+        }
+
+        // another way - w/o search field.
+        $this->script("jQuery.find(\".select2-results__options .select2-results__option:contains('{$value}')\")[0].click()");
+
+        return $this;
+    }
+
+    /**
      * Select the given value of a radio button field.
      *
      * @param  string  $field
      * @param  string  $value
+     *
      * @return $this
      */
     public function radio($field, $value)
