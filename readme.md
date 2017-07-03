@@ -76,7 +76,7 @@ $browse->select2('@selector');
 
 * Another way, if need concrete value:
 
-````php
+```php
 
 $browse->select2('@selector', 'you_text_value');
 
