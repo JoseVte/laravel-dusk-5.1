@@ -7,19 +7,7 @@
 <a href="https://packagist.org/packages/laravel/dusk"><img src="https://poser.pugx.org/laravel/dusk/license.svg" alt="License"></a>
 </p>
 
-## Introduction
-
-Laravel Dusk provides an expressive, easy-to-use browser automation and testing API. By default, Dusk does not require you to install JDK or Selenium on your machine. Instead, Dusk uses a standalone Chromedriver. However, you are free to utilize any other Selenium driver you wish.
-
-## Official Documentation
-
-Documentation for Dusk can be found on the [Laravel website](https://laravel.com/docs/master/dusk).
-
-## License
-
-Laravel Dusk is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
-
-# Laravel 5.1
+## Laravel 5.1
 
 <p align="center">
 <a href="https://travis-ci.org/JoseVte/laravel-dusk-5.1"><img src="https://travis-ci.org/JoseVte/laravel-dusk-5.1.svg" alt="Build Status"></a>
@@ -28,11 +16,20 @@ Laravel Dusk is open-sourced software licensed under the [MIT license](http://op
 <a href="https://packagist.org/packages/josrom/laravel-dusk-5.1"><img src="https://poser.pugx.org/josrom/laravel-dusk-5.1/license.svg" alt="License"></a>
 </p>
 
+## Introduction
+
+Laravel Dusk provides an expressive, easy-to-use browser automation and testing API. By default, Dusk does not require you to install JDK or Selenium on your machine. Instead, Dusk uses a standalone Chromedriver. However, you are free to utilize any other Selenium driver you wish.
+
+## Official Documentation
+
+Documentation for Dusk can be found on the [Laravel website](https://laravel.com/docs/master/dusk).
+
 ## Extra methods
 
 | Method | Definition |
 | ------ | ---------- |
 | switchFrame | (type of selector, value of selector) |
+| select2 | (selector, value(s), wait in seconds) |
 
 ### Example
 
@@ -72,19 +69,25 @@ Example of select2 uses:
 * For default select2. If value not passed, it be selected automatically:
 
 ```php
+
 $browse->select2('@selector');
+
 ```
 
 * Another way, if need concrete value:
 
 ````php
+
 $browse->select2('@selector', 'you_text_value');
+
 ```
 
 * For multiple mode usage like this:
 
-````php
+```php
+
 $browse->select2('@selector', ['foo', 'bar'], 5);
+
 ```
 
 * Css-selector for the select html tag should be ends with + select2 name:
@@ -96,3 +99,7 @@ $browse->select2('@selector', ['foo', 'bar'], 5);
 $browse->select2('.select2-users + .select2', 'you_text_value');
 
 ```
+
+## License
+
+Laravel Dusk is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)

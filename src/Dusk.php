@@ -9,8 +9,7 @@ class Dusk
     /**
      * Register the Dusk service provider.
      *
-     * @param  array  $options
-     * @return void
+     * @param array $options
      */
     public static function register(array $options = [])
     {
@@ -22,12 +21,13 @@ class Dusk
     /**
      * Determine if Dusk may run in this environment.
      *
-     * @param  array  $options
+     * @param array $options
+     *
      * @return bool
      */
     protected static function duskEnvironment($options)
     {
-        if (! isset($options['environments'])) {
+        if (!isset($options['environments'])) {
             return false;
         }
 
@@ -35,8 +35,8 @@ class Dusk
             $options['environments'] = [$options['environments']];
         }
 
-        if (! is_array($options['environments'])) {
-            throw new InvalidArgumentException("Dusk environments must be listed as an array.");
+        if (!is_array($options['environments'])) {
+            throw new InvalidArgumentException('Dusk environments must be listed as an array.');
         }
 
         return app()->environment(...$options['environments']);

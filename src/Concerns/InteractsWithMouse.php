@@ -7,7 +7,8 @@ trait InteractsWithMouse
     /**
      * Move the mouse over the given selector.
      *
-     * @param  string  $selector
+     * @param string $selector
+     *
      * @return $this
      */
     public function mouseover($selector)
