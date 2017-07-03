@@ -1,7 +1,7 @@
 {
     "name": "josrom/laravel-dusk-5.1",
     "description": "Laravel Dusk provides simple end-to-end testing and browser automation.",
-    "keywords": ["laravel", "testing", "webdriver"],
+    "keywords": ["laravel", "testing", "webdriver", "laravel-5.1"],
     "license": "MIT",
     "authors": [
         {

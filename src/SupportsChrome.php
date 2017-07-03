@@ -26,8 +26,6 @@ trait SupportsChrome
      * Start the Chromedriver process.
      *
      * @throws \RuntimeException if the driver file path doesn't exist.
-     *
-     * @return void
      */
     public static function startChromeDriver()
     {
@@ -42,8 +40,6 @@ trait SupportsChrome
 
     /**
      * Stop the Chromedriver process.
-     *
-     * @return void
      */
     public static function stopChromeDriver()
     {
@@ -77,8 +73,7 @@ trait SupportsChrome
     /**
      * Set the path to the custom Chromedriver.
      *
-     * @param  string  $path
-     * @return void
+     * @param string $path
      */
     public static function useChromedriver($path)
     {

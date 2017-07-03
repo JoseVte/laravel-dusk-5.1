@@ -9,14 +9,15 @@ class UserController
     /**
      * Retrieve the authenticated user identifier and class name.
      *
-     * @param  string|null  $guard
+     * @param string|null $guard
+     *
      * @return array
      */
     public function user($guard = null)
     {
         $user = Auth::guard($guard)->user();
 
-        if (! $user) {
+        if (!$user) {
             return [];
         }
 
@@ -29,8 +30,9 @@ class UserController
     /**
      * Login using the given user ID / email.
      *
-     * @param  string  $userId
-     * @param  string  $guard
+     * @param string $userId
+     * @param string $guard
+     *
      * @return Response
      */
     public function login($userId, $guard = null)
@@ -40,9 +42,9 @@ class UserController
         );
 
         if (str_contains($userId, '@')) {
-            $user = (new $model)->where('email', $userId)->first();
+            $user = (new $model())->where('email', $userId)->first();
         } else {
-            $user = (new $model)->find($userId);
+            $user = (new $model())->find($userId);
         }
 
         Auth::guard($guard)->login($user);
@@ -51,7 +53,8 @@ class UserController
     /**
      * Log the user out of the application.
      *
-     * @param  string  $guard
+     * @param string $guard
+     *
      * @return Response
      */
     public function logout($guard = null)
@@ -62,7 +65,8 @@ class UserController
     /**
      * Get the model for the given guard.
      *
-     * @param  string  $guard
+     * @param string $guard
+     *
      * @return string
      */
     protected function modelForGuard($guard)
