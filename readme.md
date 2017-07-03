@@ -18,3 +18,9 @@ Documentation for Dusk can be found on the [Laravel website](https://laravel.com
 ## License
 
 Laravel Dusk is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+
+## Extra methods
+
+| Method | Definition |
+| ------ | ---------- |
+| switchFrame | (type of selector, value of selector) |

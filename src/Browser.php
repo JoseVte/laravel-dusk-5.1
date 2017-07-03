@@ -5,6 +5,7 @@ namespace Laravel\Dusk;
 use Closure;
 use BadMethodCallException;
 use Illuminate\Support\Str;
+use Facebook\WebDriver\WebDriverBy;
 use Illuminate\Support\Traits\Macroable;
 use Facebook\WebDriver\WebDriverDimension;
 
@@ -73,9 +74,8 @@ class Browser
     /**
      * Create a browser instance.
      *
-     * @param  \Facebook\WebDriver\Remote\RemoteWebDriver  $driver
-     * @param  ElementResolver  $resolver
-     * @return void
+     * @param \Facebook\WebDriver\Remote\RemoteWebDriver $driver
+     * @param ElementResolver                            $resolver
      */
     public function __construct($driver, $resolver = null)
     {
@@ -87,7 +87,8 @@ class Browser
     /**
      * Browse to the given URL.
      *
-     * @param  string  $url
+     * @param string $url
+     *
      * @return $this
      */
     public function visit($url)
@@ -104,7 +105,7 @@ class Browser
         // If the URL does not start with http or https, then we will prepend the base
         // URL onto the URL and navigate to the URL. This will actually navigate to
         // the URL in the browser. Then we will be ready to make assertions, etc.
-        if (! Str::startsWith($url, ['http://', 'https://'])) {
+        if (!Str::startsWith($url, ['http://', 'https://'])) {
             $url = static::$baseUrl.'/'.ltrim($url, '/');
         }
 
@@ -123,8 +124,9 @@ class Browser
     /**
      * Browse to the given route.
      *
-     * @param  string  $route
-     * @param  array  $parameters
+     * @param string $route
+     * @param array  $parameters
+     *
      * @return $this
      */
     public function visitRoute($route, $parameters = [])
@@ -135,7 +137,8 @@ class Browser
     /**
      * Set the current page object.
      *
-     * @param  mixed  $page
+     * @param mixed $page
+     *
      * @return $this
      */
     public function on($page)
@@ -145,10 +148,8 @@ class Browser
         // Here we will set the page elements on the resolver instance, which will allow
         // the developer to access short-cuts for CSS selectors on the page which can
         // allow for more expressive navigation and interaction with all the pages.
-        $this->resolver->pageElements(array_merge(
-            $page::siteElements(), $page->elements()
-        ));
-        
+        $this->resolver->pageElements(array_merge($page::siteElements(), $page->elements()));
+
         $page->assert($this);
 
         return $this;
@@ -177,7 +178,7 @@ class Browser
 
         return $this;
     }
-    
+
     /**
      * Maximize the browser window.
      *
@@ -193,8 +194,9 @@ class Browser
     /**
      * Resize the browser window.
      *
-     * @param  int  $width
-     * @param  int  $height
+     * @param int $width
+     * @param int $height
+     *
      * @return $this
      */
     public function resize($width, $height)
@@ -209,7 +211,8 @@ class Browser
     /**
      * Take a screenshot and store it with the given name.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return $this
      */
     public function screenshot($name)
@@ -224,18 +227,16 @@ class Browser
     /**
      * Store the console output with the given name.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return $this
      */
     public function storeConsoleLog($name)
     {
         $console = $this->driver->manage()->getLog('browser');
 
-        if (! empty($console)) {
-            file_put_contents(
-                sprintf('%s/%s.log', rtrim(static::$storeConsoleLogAt, '/'), $name)
-                , json_encode($console, JSON_PRETTY_PRINT)
-            );
+        if (!empty($console)) {
+            file_put_contents(sprintf('%s/%s.log', rtrim(static::$storeConsoleLogAt, '/'), $name), json_encode($console, JSON_PRETTY_PRINT));
         }
 
         return $this;
@@ -244,8 +245,9 @@ class Browser
     /**
      * Execute a Closure with a scoped browser instance.
      *
-     * @param  string  $selector
-     * @param  \Closure  $callback
+     * @param string   $selector
+     * @param \Closure $callback
+     *
      * @return $this
      */
     public function with($selector, Closure $callback)
@@ -265,12 +267,10 @@ class Browser
 
     /**
      * Ensure that jQuery is available on the page.
-     *
-     * @return void
      */
     public function ensurejQueryIsAvailable()
     {
-        if ($this->driver->executeScript("return window.jQuery == null")) {
+        if ($this->driver->executeScript('return window.jQuery == null')) {
             $this->driver->executeScript(file_get_contents(__DIR__.'/../bin/jquery.js'));
         }
     }
@@ -278,7 +278,8 @@ class Browser
     /**
      * Pause for the given amount of milliseconds.
      *
-     * @param  int  $milliseconds
+     * @param int $milliseconds
+     *
      * @return $this
      */
     public function pause($milliseconds)
@@ -290,8 +291,6 @@ class Browser
 
     /**
      * Close the browser.
-     *
-     * @return void
      */
     public function quit()
     {
@@ -301,7 +300,8 @@ class Browser
     /**
      * Tap the browser into a callback.
      *
-     * @param  \Closure  $callback
+     * @param \Closure $callback
+     *
      * @return $this
      */
     public function tap($callback)
@@ -313,8 +313,6 @@ class Browser
 
     /**
      * Dump the content from the last response.
-     *
-     * @return void
      */
     public function dump()
     {
@@ -335,8 +333,6 @@ class Browser
 
     /**
      * Stop running tests but leave the browser open.
-     *
-     * @return void
      */
     public function stop()
     {
@@ -344,10 +340,53 @@ class Browser
     }
 
     /**
+     * Switch the browser into a iframe.
+     *
+     * @param string $selector
+     * @param string $frame
+     *
+     * @return $this
+     */
+    public function switchFrame($selector = 'id', $frame = null)
+    {
+        switch ($selector) {
+            case 'id':
+                $frame = $this->driver->findElement(WebDriverBy::id($frame));
+                break;
+            case 'name':
+                $frame = $this->driver->findElement(WebDriverBy::name($frame));
+                break;
+            case 'class':
+                $frame = $this->driver->findElement(WebDriverBy::className($frame));
+                break;
+            case 'css':
+                $frame = $this->driver->findElement(WebDriverBy::cssSelector($frame));
+                break;
+            case 'xpath':
+                $frame = $this->driver->findElement(WebDriverBy::xpath($frame));
+                break;
+            case 'link':
+                $frame = $this->driver->findElement(WebDriverBy::linkText($frame));
+                break;
+            case 'partialLink':
+                $frame = $this->driver->findElement(WebDriverBy::partialLinkText($frame));
+                break;
+            case 'tagName':
+                $frame = $this->driver->findElement(WebDriverBy::tagName($frame));
+                break;
+        }
+
+        $this->driver->switchTo()->defaultContent()->switchTo()->frame($frame);
+
+        return $this;
+    }
+
+    /**
      * Dynamically call a method on the browser.
      *
-     * @param  string  $method
-     * @param  array  $parameters
+     * @param string $method
+     * @param array  $parameters
+     *
      * @return mixed
      */
     public function __call($method, $parameters)
