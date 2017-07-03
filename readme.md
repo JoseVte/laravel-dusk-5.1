@@ -61,7 +61,6 @@ $browser->loginAs($user)
     ->refresh()
     ->assertSee('Payment verified')
     ;
-
 ```
 
 Example of select2 uses:
@@ -69,35 +68,30 @@ Example of select2 uses:
 * For default select2. If value not passed, it be selected automatically:
 
 ```php
-
 $browse->select2('@selector');
-
 ```
 
 * Another way, if need concrete value:
 
 ```php
-
 $browse->select2('@selector', 'you_text_value');
-
 ```
 
 * For multiple mode usage like this:
 
 ```php
-
 $browse->select2('@selector', ['foo', 'bar'], 5);
-
 ```
 
 * Css-selector for the select html tag should be ends with + select2 name:
 
-```
+```html
 <select class="form-control select2-users" name="user_id">
 </select>
+```
 
+```php
 $browse->select2('.select2-users + .select2', 'you_text_value');
-
 ```
 
 ## License
