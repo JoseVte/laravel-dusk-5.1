@@ -30,6 +30,7 @@ Documentation for Dusk can be found on the [Laravel website](https://laravel.com
 | ------ | ---------- |
 | switchFrame | (type of selector, value of selector) |
 | select2 | (selector, value(s), wait in seconds) |
+| selectBySelector | (selector css, value of selector) |
 
 ### Example
 
@@ -92,6 +93,12 @@ $browse->select2('@selector', ['foo', 'bar'], 5);
 
 ```php
 $browse->select2('.select2-users + .select2', 'you_text_value');
+```
+
+Example of selectBySelector uses:
+
+```php
+$browse->selectBySelector('select.my-custom-selector', 'value');
 ```
 
 ## License
