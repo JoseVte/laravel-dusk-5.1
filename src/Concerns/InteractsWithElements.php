@@ -88,7 +88,7 @@ trait InteractsWithElements
      *
      * @param string      $selector
      * @param string|null $value
-     * 
+     *
      * @return $this
      */
     public function value($selector, $value = null)
@@ -242,11 +242,40 @@ trait InteractsWithElements
     }
 
     /**
+     * Select the given value or random value of a drop-down field.
+     *
+     * @param string $selector
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function selectBySelector($selector, $value = null)
+    {
+        $element = $this->resolver->firstOrFail($field);
+
+        $options = $element->findElements(WebDriverBy::tagName('option'));
+
+        if (is_null($value)) {
+            $options[array_rand($options)]->click();
+        } else {
+            foreach ($options as $option) {
+                if ((string) $option->getAttribute('value') === (string) $value) {
+                    $option->click();
+
+                    break;
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Select the given value or random value of a drop-down field using Select2.
      *
      * @param string       $field selector, or @element
      * @param array|string $value option value, may be multiple, eg. ['foo', 'bar']
-     * @param int          $wait  count of seconds for ajax loading.
+     * @param int          $wait  count of seconds for ajax loading
      *
      * @return Browser
      */
