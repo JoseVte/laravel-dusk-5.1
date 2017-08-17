@@ -251,7 +251,7 @@ trait InteractsWithElements
      */
     public function selectBySelector($selector, $value = null)
     {
-        $element = $this->resolver->firstOrFail($field);
+        $element = $this->resolver->firstOrFail($selector);
 
         $options = $element->findElements(WebDriverBy::tagName('option'));
 
