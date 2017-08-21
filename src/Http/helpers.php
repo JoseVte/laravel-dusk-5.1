@@ -51,3 +51,27 @@ if (!function_exists('retry')) {
         }
     }
 }
+
+if (!function_exists('str_replace_first')) {
+    /**
+     * Replace the first occurrence of a given value in the string.
+     *
+     * @param string $search
+     * @param string $replace
+     * @param string $subject
+     *
+     * @return string
+     */
+    function str_replace_first($search, $replace, $subject)
+    {
+        if ($search == '') {
+            return $subject;
+        }
+        $position = strpos($subject, $search);
+        if ($position !== false) {
+            return substr_replace($subject, $replace, $position, strlen($search));
+        }
+
+        return $subject;
+    }
+}
