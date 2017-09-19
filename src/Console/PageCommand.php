@@ -46,9 +46,10 @@ class PageCommand extends GeneratorCommand
      */
     protected function getPath($name)
     {
+        $name = str_replace_first($this->laravel->getNamespace(), '', $name);
         $name = str_replace_first($this->rootNamespace(), '', $name);
 
-        return $this->laravel->basePath().'/tests'.str_replace('\\', '/', $name).'.php';
+        return $this->laravel->basePath().'/tests/'.str_replace('\\', '/', $name).'.php';
     }
 
     /**
