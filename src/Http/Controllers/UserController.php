@@ -28,6 +28,16 @@ class UserController
     }
 
     /**
+     * Get all of the defined middleware short-hand names.
+     *
+     * @return array
+     */
+    public function getMiddleware()
+    {
+        return [];
+    }
+
+    /**
      * Login using the given user ID / email.
      *
      * @param string $userId
