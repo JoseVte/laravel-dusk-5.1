@@ -52,7 +52,7 @@ class InstallCommand extends Command
             'HomePage.stub' => base_path('tests/Browser/Pages/HomePage.php'),
             'DuskTestCase.stub' => base_path('tests/DuskTestCase.php'),
             'Page.stub' => base_path('tests/Browser/Pages/Page.php'),
-            'CreatesApplication.stub' => base_path('tests/Browser/CreatesApplication.php'),
+            'CreatesApplication.stub' => base_path('tests/CreatesApplication.php'),
         ];
 
         foreach ($subs as $stub => $file) {
