@@ -22,7 +22,47 @@ Laravel Dusk provides an expressive, easy-to-use browser automation and testing 
 
 ## Official Documentation
 
-Documentation for Dusk can be found on the [Laravel website](https://laravel.com/docs/master/dusk).
+Documentation for Dusk can be found on the [Laravel website](https://github.com/laravel/dusk/tree/1.0).
+
+## Installation
+
+To get the last version of Laravel Dusk for 5.1, simply require the project using [Composer](https://getcomposer.org/):
+
+```bash
+composer require --dev josrom/laravel-dusk-5.1
+```
+
+Instead, you may of course manually update your require block and run composer update if you so choose:
+
+```json
+{
+    "require-dev": {
+        "josrom/laravel-dusk-5.1": "0.1.*"
+    }
+}
+```
+
+Add the service provider `app/Providers/AppServiceProvider.php` file:
+
+```php
+if ($this->app->environment('local')) {
+    $this->app->register(\Laravel\Dusk\DuskServiceProvider::class);
+}
+```
+
+After installing the Dusk package, run the `dusk:install` Artisan command:
+
+```sh
+php artisan dusk:install
+```
+
+A `Browser` directory will be created within your `tests` directory and will contain an example test. Next, set the `APP_URL` environment variable in your `.env` file. This value should match the URL you use to access your application in a browser.
+
+To run your tests, use the `dusk` Artisan command. The `dusk` command accepts any argument that is also accepted by the `phpunit` command:
+
+```sh
+php artisan dusk
+```
 
 ## Extra methods
 
@@ -31,6 +71,8 @@ Documentation for Dusk can be found on the [Laravel website](https://laravel.com
 | switchFrame | (type of selector, value of selector) |
 | select2 | (selector, value(s), wait in seconds) |
 | selectBySelector | (selector css, value of selector) |
+| assertFragmentIs | (value of fragment) |
+| assertQueryIs | (value of query) |
 
 ### Example
 
@@ -99,6 +141,22 @@ Example of selectBySelector uses:
 
 ```php
 $browse->selectBySelector('select.my-custom-selector', 'value');
+```
+
+Example of assertFragmentIs uses:
+
+```php
+$browser->visit('http://laravel.com/#/login')
+        ->assertPathIs('/')
+        ->assertFragmentIs('/login');
+```
+
+Example of assertQueryIs uses:
+
+```php
+$browser->visit('http://laravel.com?key=test')
+        ->assertPathIs('/')
+        ->assertQueryIs('key=test');
 ```
 
 ## License
