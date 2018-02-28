@@ -40,6 +40,24 @@ trait MakesAssertions
     }
 
     /**
+     * Assert that the current URL query matches the given query.
+     *
+     * @param string $query
+     *
+     * @return $this
+     */
+    public function assertQueryIs($query)
+    {
+        $url = parse_url($this->driver->getCurrentURL());
+        if (!isset($url['query'])) {
+            $url['query'] = '';
+        }
+        PHPUnit::assertEquals($query, $url['query']);
+
+        return $this;
+    }
+
+    /**
      * Assert that the current URL fragment matches the given fragment.
      *
      * @param string $fragment
