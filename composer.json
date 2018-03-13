@@ -1,7 +1,13 @@
 {
     "name": "josrom/laravel-dusk-5.1",
     "description": "Laravel Dusk provides simple end-to-end testing and browser automation.",
-    "keywords": ["laravel", "testing", "webdriver", "laravel-5.1"],
+    "keywords": [
+        "laravel",
+        "testing",
+        "webdriver",
+        "laravel-5.1",
+        "dusk"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -16,12 +22,12 @@
     "require": {
         "php": ">=5.6.4",
         "laravel/framework": "5.1.*",
-        "facebook/webdriver": "~1.0",
+        "facebook/webdriver": "1.*",
         "nesbot/carbon": "~1.20"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7",
-        "mockery/mockery": "^0.9.6"
+        "phpunit/phpunit": "5.7.*",
+        "mockery/mockery": "0.9.*"
     },
     "autoload": {
         "psr-4": {
@@ -31,5 +37,6 @@
             "src/Http/helpers.php"
         ]
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
