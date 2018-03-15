@@ -43,6 +43,9 @@ class Loader
     /**
      * Load `.env` file in given directory.
      *
+     * @throws \Laravel\Dusk\Exception\InvalidFileException
+     * @throws \Laravel\Dusk\Exception\InvalidPathException
+     *
      * @return array
      */
     public function load()
@@ -52,7 +55,7 @@ class Loader
         $filePath = $this->filePath;
         $lines = $this->readLinesFromFile($filePath);
         foreach ($lines as $line) {
-            if (!$this->isComment($line) && $this->looksLikeSetter($line)) {
+            if (! $this->isComment($line) && $this->looksLikeSetter($line)) {
                 $this->setEnvironmentVariable($line);
             }
         }
@@ -67,7 +70,7 @@ class Loader
      */
     protected function ensureFileIsReadable()
     {
-        if (!is_readable($this->filePath) || !is_file($this->filePath)) {
+        if (! is_readable($this->filePath) || ! is_file($this->filePath)) {
             throw new InvalidPathException(sprintf('Unable to read the environment file at %s.', $this->filePath));
         }
     }
@@ -84,6 +87,8 @@ class Loader
      * @param string $name
      * @param string $value
      *
+     * @throws \Laravel\Dusk\Exception\InvalidFileException
+     *
      * @return array
      */
     protected function normaliseEnvironmentVariable($name, $value)
@@ -94,7 +99,7 @@ class Loader
 
         $value = $this->resolveNestedVariables($value);
 
-        return array($name, $value);
+        return [$name, $value];
     }
 
     /**
@@ -105,6 +110,8 @@ class Loader
      * @param string $name
      * @param string $value
      *
+     * @throws \Laravel\Dusk\Exception\InvalidFileException
+     *
      * @return array
      */
     public function processFilters($name, $value)
@@ -113,7 +120,7 @@ class Loader
         list($name, $value) = $this->sanitiseVariableName($name, $value);
         list($name, $value) = $this->sanitiseVariableValue($name, $value);
 
-        return array($name, $value);
+        return [$name, $value];
     }
 
     /**
@@ -175,7 +182,7 @@ class Loader
             list($name, $value) = array_map('trim', explode('=', $name, 2));
         }
 
-        return array($name, $value);
+        return [$name, $value];
     }
 
     /**
@@ -184,15 +191,15 @@ class Loader
      * @param string $name
      * @param string $value
      *
-     * @throws \Dotenv\Exception\InvalidFileException
+     * @throws \Laravel\Dusk\Exception\InvalidFileException
      *
      * @return array
      */
     protected function sanitiseVariableValue($name, $value)
     {
         $value = trim($value);
-        if (!$value) {
-            return array($name, $value);
+        if (! $value) {
+            return [$name, $value];
         }
 
         if ($this->beginsWithAQuote($value)) { // value starts with a quote
@@ -213,8 +220,7 @@ class Loader
                 $quote
             );
             $value = preg_replace($regexPattern, '$1', $value);
-            $value = str_replace("\\$quote", $quote, $value);
-            $value = str_replace('\\\\', '\\', $value);
+            $value = str_replace(["\\$quote", '\\\\'], [$quote, '\\'], $value);
         } else {
             $parts = explode(' #', $value, 2);
             $value = trim($parts[0]);
@@ -225,7 +231,7 @@ class Loader
             }
         }
 
-        return array($name, trim($value));
+        return [$name, trim($value)];
     }
 
     /**
@@ -248,9 +254,9 @@ class Loader
                     $nestedVariable = $loader->getEnvironmentVariable($matchedPatterns[1]);
                     if ($nestedVariable === null) {
                         return $matchedPatterns[0];
-                    } else {
-                        return $nestedVariable;
                     }
+
+                    return $nestedVariable;
                 },
                 $value
             );
@@ -269,9 +275,9 @@ class Loader
      */
     protected function sanitiseVariableName($name, $value)
     {
-        $name = trim(str_replace(array('export ', '\'', '"'), '', $name));
+        $name = trim(str_replace(['export ', '\'', '"'], '', $name));
 
-        return array($name, $value);
+        return [$name, $value];
     }
 
     /**
@@ -317,8 +323,10 @@ class Loader
      *
      * The environment variable value is stripped of single and double quotes.
      *
-     * @param string      $name
+     * @param string $name
      * @param string|null $value
+     *
+     * @throws \Laravel\Dusk\Exception\InvalidFileException
      */
     public function setEnvironmentVariable($name, $value = null)
     {

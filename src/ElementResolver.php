@@ -77,11 +77,13 @@ class ElementResolver
      *
      * @param string $field
      *
+     * @throws \Exception
+     *
      * @return \Facebook\WebDriver\Remote\RemoteWebElement
      */
     public function resolveForTyping($field)
     {
-        if (!is_null($element = $this->findById($field))) {
+        if (! is_null($element = $this->findById($field))) {
             return $element;
         }
 
@@ -95,11 +97,13 @@ class ElementResolver
      *
      * @param string $field
      *
+     * @throws \Exception
+     *
      * @return \Facebook\WebDriver\Remote\RemoteWebElement
      */
     public function resolveForSelection($field)
     {
-        if (!is_null($element = $this->findById($field))) {
+        if (! is_null($element = $this->findById($field))) {
             return $element;
         }
 
@@ -112,7 +116,10 @@ class ElementResolver
      * Resolve all the options with the given value on the select field.
      *
      * @param string $field
-     * @param array  $values
+     * @param array $values
+     *
+     * @throws \Exception
+     * @throws \Exception
      *
      * @return array
      */
@@ -136,11 +143,13 @@ class ElementResolver
      * @param string $field
      * @param string $value
      *
+     * @throws \Exception
+     *
      * @return \Facebook\WebDriver\Remote\RemoteWebElement
      */
     public function resolveForRadioSelection($field, $value = null)
     {
-        if (!is_null($element = $this->findById($field))) {
+        if (! is_null($element = $this->findById($field))) {
             return $element;
         }
 
@@ -161,17 +170,19 @@ class ElementResolver
      * @param string $field
      * @param string $value
      *
+     * @throws \Exception
+     *
      * @return \Facebook\WebDriver\Remote\RemoteWebElement
      */
     public function resolveForChecking($field, $value = null)
     {
-        if (!is_null($element = $this->findById($field))) {
+        if (! is_null($element = $this->findById($field))) {
             return $element;
         }
 
         $selector = "input[type=checkbox][name='{$field}']";
 
-        if (!is_null($value)) {
+        if (! is_null($value)) {
             $selector .= "[value='{$value}']";
         }
 
@@ -185,11 +196,13 @@ class ElementResolver
      *
      * @param string $field
      *
+     * @throws \Exception
+     *
      * @return \Facebook\WebDriver\Remote\RemoteWebElement
      */
     public function resolveForAttachment($field)
     {
-        if (!is_null($element = $this->findById($field))) {
+        if (! is_null($element = $this->findById($field))) {
             return $element;
         }
 
@@ -203,12 +216,14 @@ class ElementResolver
      *
      * @param string $button
      *
+     * @throws \InvalidArgumentException
+     *
      * @return \Facebook\WebDriver\Remote\RemoteWebElement
      */
     public function resolveForButtonPress($button)
     {
         foreach ($this->buttonFinders as $method) {
-            if (!is_null($element = $this->{$method}($button))) {
+            if (! is_null($element = $this->{$method}($button))) {
                 return $element;
             }
         }
@@ -227,7 +242,7 @@ class ElementResolver
      */
     protected function findButtonBySelector($button)
     {
-        if (!is_null($element = $this->find($button))) {
+        if (! is_null($element = $this->find($button))) {
             return $element;
         }
     }
@@ -241,8 +256,8 @@ class ElementResolver
      */
     protected function findButtonByName($button)
     {
-        if (!is_null($element = $this->find("input[type=submit][name='{$button}']")) ||
-            !is_null($element = $this->find("button[name='{$button}']"))) {
+        if (! is_null($element = $this->find("input[type=submit][name='{$button}']")) ||
+            ! is_null($element = $this->find("button[name='{$button}']"))) {
             return $element;
         }
     }
@@ -314,6 +329,8 @@ class ElementResolver
      *
      * @param array $selectors
      *
+     * @throws \Exception
+     *
      * @return \Facebook\WebDriver\Remote\RemoteWebElement
      */
     public function firstOrFail($selectors)
@@ -338,7 +355,7 @@ class ElementResolver
      */
     public function findOrFail($selector)
     {
-        if (!is_null($element = $this->findById($selector))) {
+        if (! is_null($element = $this->findById($selector))) {
             return $element;
         }
 
@@ -381,7 +398,9 @@ class ElementResolver
         })->toArray();
 
         $selector = str_replace(
-            array_keys($sortedElements), array_values($sortedElements), $selector
+            array_keys($sortedElements),
+            array_values($sortedElements),
+            $selector
         );
 
         return trim($this->prefix.' '.$selector);

@@ -1,6 +1,6 @@
 <?php
 
-if (!function_exists('tap')) {
+if (! function_exists('tap')) {
     /**
      * Call the given Closure with the given value then return the value.
      *
@@ -17,7 +17,7 @@ if (!function_exists('tap')) {
     }
 }
 
-if (!function_exists('retry')) {
+if (! function_exists('retry')) {
     /**
      * Retry an operation a given number of times.
      *
@@ -25,9 +25,9 @@ if (!function_exists('retry')) {
      * @param callable $callback
      * @param int      $sleep
      *
-     * @return mixed
-     *
      * @throws \Exception
+     *
+     * @return mixed
      */
     function retry($times, callable $callback, $sleep = 0)
     {
@@ -37,7 +37,7 @@ if (!function_exists('retry')) {
         try {
             return $callback();
         } catch (Exception $e) {
-            if (!$times) {
+            if (! $times) {
                 throw $e;
             }
 
@@ -52,7 +52,7 @@ if (!function_exists('retry')) {
     }
 }
 
-if (!function_exists('str_replace_first')) {
+if (! function_exists('str_replace_first')) {
     /**
      * Replace the first occurrence of a given value in the string.
      *

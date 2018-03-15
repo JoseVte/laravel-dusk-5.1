@@ -9,6 +9,12 @@ use Facebook\WebDriver\Remote\LocalFileDetector;
 use Facebook\WebDriver\Remote\UselessFileDetector;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 
+/**
+ * Trait InteractsWithElements
+ *
+ * @property \Facebook\WebDriver\Remote\RemoteWebDriver driver
+ * @property \Laravel\Dusk\ElementResolver              resolver
+ */
 trait InteractsWithElements
 {
     /**
@@ -134,8 +140,8 @@ trait InteractsWithElements
     /**
      * Send the given keys to the element matching the given selector.
      *
-     * @param string  $selector
-     * @param dynamic $keys
+     * @param string $selector
+     * @param array ...$keys
      *
      * @return $this
      */
@@ -174,6 +180,8 @@ trait InteractsWithElements
      * @param string $field
      * @param string $value
      *
+     * @throws \Exception
+     *
      * @return $this
      */
     public function type($field, $value)
@@ -189,6 +197,8 @@ trait InteractsWithElements
      * @param string $field
      * @param string $value
      *
+     * @throws \Exception
+     *
      * @return $this
      */
     public function append($field, $value)
@@ -202,6 +212,8 @@ trait InteractsWithElements
      * Clear the given field.
      *
      * @param string $field
+     *
+     * @throws \Exception
      *
      * @return $this
      */
@@ -217,6 +229,8 @@ trait InteractsWithElements
      *
      * @param string $field
      * @param string $value
+     *
+     * @throws \Exception
      *
      * @return $this
      */
@@ -247,6 +261,8 @@ trait InteractsWithElements
      * @param string $selector
      * @param string $value
      *
+     * @throws \Exception
+     *
      * @return $this
      */
     public function selectBySelector($selector, $value = null)
@@ -273,11 +289,13 @@ trait InteractsWithElements
     /**
      * Select the given value or random value of a drop-down field using Select2.
      *
-     * @param string       $field selector, or @element
+     * @param string $field       selector, or @element
      * @param array|string $value option value, may be multiple, eg. ['foo', 'bar']
-     * @param int          $wait  count of seconds for ajax loading
+     * @param int $wait           count of seconds for ajax loading
      *
-     * @return Browser
+     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     *
+     * @return \Laravel\Dusk\Concerns\Browser|\Laravel\Dusk\Concerns\InteractsWithElements
      */
     public function select2($field, $value = null, $wait = 2)
     {
@@ -320,6 +338,8 @@ trait InteractsWithElements
      * @param string $field
      * @param string $value
      *
+     * @throws \Exception
+     *
      * @return $this
      */
     public function radio($field, $value)
@@ -335,13 +355,15 @@ trait InteractsWithElements
      * @param string $field
      * @param string $value
      *
+     * @throws \Exception
+     *
      * @return $this
      */
     public function check($field, $value = null)
     {
         $element = $this->resolver->resolveForChecking($field, $value);
 
-        if (!$element->isSelected()) {
+        if (! $element->isSelected()) {
             $element->click();
         }
 
@@ -353,6 +375,8 @@ trait InteractsWithElements
      *
      * @param string $field
      * @param string $value
+     *
+     * @throws \Exception
      *
      * @return $this
      */
@@ -372,6 +396,8 @@ trait InteractsWithElements
      *
      * @param string $field
      * @param string $path
+     *
+     * @throws \Exception
      *
      * @return $this
      */
@@ -393,6 +419,8 @@ trait InteractsWithElements
      *
      * @param string $button
      *
+     * @throws \InvalidArgumentException
+     *
      * @return $this
      */
     public function press($button)
@@ -406,7 +434,10 @@ trait InteractsWithElements
      * Press the button with the given text or name.
      *
      * @param string $button
-     * @param int    $seconds
+     * @param int $seconds
+     *
+     * @throws \InvalidArgumentException
+     * @throws \Facebook\WebDriver\Exception\TimeOutException
      *
      * @return $this
      */
@@ -432,7 +463,8 @@ trait InteractsWithElements
     public function drag($from, $to)
     {
         (new WebDriverActions($this->driver))->dragAndDrop(
-            $this->resolver->findOrFail($from), $this->resolver->findOrFail($to)
+            $this->resolver->findOrFail($from),
+            $this->resolver->findOrFail($to)
         )->perform();
 
         return $this;
@@ -502,7 +534,9 @@ trait InteractsWithElements
     public function dragOffset($selector, $x = 0, $y = 0)
     {
         (new WebDriverActions($this->driver))->dragAndDropBy(
-            $this->resolver->findOrFail($selector), $x, $y
+            $this->resolver->findOrFail($selector),
+            $x,
+            $y
         )->perform();
 
         return $this;

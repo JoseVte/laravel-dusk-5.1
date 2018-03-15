@@ -7,6 +7,12 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Assert as PHPUnit;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 
+/**
+ * Trait MakesAssertions
+ *
+ * @property \Facebook\WebDriver\Remote\RemoteWebDriver driver
+ * @property \Laravel\Dusk\ElementResolver              resolver
+ */
 trait MakesAssertions
 {
     /**
@@ -27,6 +33,8 @@ trait MakesAssertions
      * Assert that the page title contains the given value.
      *
      * @param string $title
+     *
+     * @throws \PHPUnit_Framework_AssertionFailedError
      *
      * @return $this
      */
@@ -49,7 +57,7 @@ trait MakesAssertions
     public function assertQueryIs($query)
     {
         $url = parse_url($this->driver->getCurrentURL());
-        if (!isset($url['query'])) {
+        if (! isset($url['query'])) {
             $url['query'] = '';
         }
         PHPUnit::assertEquals($query, $url['query']);
@@ -67,7 +75,7 @@ trait MakesAssertions
     public function assertFragmentIs($fragment)
     {
         $url = parse_url($this->driver->getCurrentURL());
-        if (!isset($url['fragment'])) {
+        if (! isset($url['fragment'])) {
             $url['fragment'] = '';
         }
         PHPUnit::assertEquals($fragment, $url['fragment']);
@@ -153,7 +161,8 @@ trait MakesAssertions
         }
 
         PHPUnit::assertEquals(
-            $value, $output[$name],
+            $value,
+            $output[$name],
             "Query string parameter [{$name}] had value [{$output[$name]}], but expected [{$value}]."
         );
 
@@ -165,13 +174,15 @@ trait MakesAssertions
      *
      * @param string $name
      *
+     * @throws \PHPUnit_Framework_AssertionFailedError
+     *
      * @return $this
      */
     public function assertQueryStringMissing($name)
     {
         $parsedUrl = parse_url($this->driver->getCurrentURL());
 
-        if (!array_key_exists('query', $parsedUrl)) {
+        if (! array_key_exists('query', $parsedUrl)) {
             PHPUnit::assertTrue(true);
 
             return $this;
@@ -180,7 +191,8 @@ trait MakesAssertions
         parse_str($parsedUrl['query'], $output);
 
         PHPUnit::assertArrayNotHasKey(
-            $name, $output,
+            $name,
+            $output,
             "Found unexpected query string parameter [{$name}] in [".$this->driver->getCurrentURL().'].'
         );
 
@@ -199,14 +211,16 @@ trait MakesAssertions
         $parsedUrl = parse_url($this->driver->getCurrentURL());
 
         PHPUnit::assertArrayHasKey(
-            'query', $parsedUrl,
+            'query',
+            $parsedUrl,
             'Did not see expected query string in ['.$this->driver->getCurrentURL().'].'
         );
 
         parse_str($parsedUrl['query'], $output);
 
         PHPUnit::assertArrayHasKey(
-            $name, $output,
+            $name,
+            $output,
             "Did not see expected query string parameter [{$name}] in [".$this->driver->getCurrentURL().'].'
         );
 
@@ -218,12 +232,15 @@ trait MakesAssertions
      *
      * @param string $name
      *
+     * @throws \PHPUnit_Framework_AssertionFailedError
+     *
      * @return $this
      */
     public function assertHasCookie($name)
     {
-        PHPUnit::assertTrue(
-            !is_null($this->cookie($name)),
+        PHPUnit::assertNotInternalType(
+            'null',
+            $this->cookie($name),
             "Did not find expected cookie [{$name}]."
         );
 
@@ -244,7 +261,8 @@ trait MakesAssertions
         $actual = $decrypt ? $this->cookie($name) : $this->plainCookie($name);
 
         PHPUnit::assertEquals(
-            $value, $actual,
+            $value,
+            $actual,
             "Cookie [{$name}] had value [{$actual}], but expected [{$value}]."
         );
 
@@ -269,6 +287,8 @@ trait MakesAssertions
      *
      * @param string $text
      *
+     * @throws \PHPUnit_Framework_AssertionFailedError
+     *
      * @return $this
      */
     public function assertSee($text)
@@ -280,6 +300,8 @@ trait MakesAssertions
      * Assert that the given text does not appear on the page.
      *
      * @param string $text
+     *
+     * @throws \PHPUnit_Framework_AssertionFailedError
      *
      * @return $this
      */
@@ -293,6 +315,8 @@ trait MakesAssertions
      *
      * @param string $selector
      * @param string $text
+     *
+     * @throws \PHPUnit_Framework_AssertionFailedError
      *
      * @return $this
      */
@@ -315,6 +339,8 @@ trait MakesAssertions
      *
      * @param string $selector
      * @param string $text
+     *
+     * @throws \PHPUnit_Framework_AssertionFailedError
      *
      * @return $this
      */
@@ -342,7 +368,8 @@ trait MakesAssertions
     public function assertSourceHas($code)
     {
         PHPUnit::assertContains(
-            $code, $this->driver->getPageSource(),
+            $code,
+            $this->driver->getPageSource(),
             "Did not find expected source code [{$code}]"
         );
 
@@ -359,7 +386,8 @@ trait MakesAssertions
     public function assertSourceMissing($code)
     {
         PHPUnit::assertNotContains(
-            $code, $this->driver->getPageSource(),
+            $code,
+            $this->driver->getPageSource(),
             "Found unexpected source code [{$code}]"
         );
 
@@ -370,6 +398,8 @@ trait MakesAssertions
      * Assert that the given link is visible.
      *
      * @param string $link
+     *
+     * @throws \PHPUnit_Framework_AssertionFailedError
      *
      * @return $this
      */
@@ -393,6 +423,8 @@ trait MakesAssertions
      * Assert that the given link is not visible.
      *
      * @param string $link
+     *
+     * @throws \PHPUnit_Framework_AssertionFailedError
      *
      * @return $this
      */
@@ -469,6 +501,8 @@ JS;
      *
      * @param string $button
      *
+     * @throws \PHPUnit_Framework_AssertionFailedError
+     *
      * @return $this
      */
     public function assertDontSeeButton($button)
@@ -487,8 +521,9 @@ JS;
             $element = null;
         }
 
-        PHPUnit::assertTrue(
-            $element == null,
+        PHPUnit::assertEquals(
+            $element,
+            null,
             $message
         );
 
@@ -500,6 +535,8 @@ JS;
      *
      * @param string $field
      * @param string $value
+     *
+     * @throws \Exception
      *
      * @return $this
      */
@@ -516,6 +553,8 @@ JS;
      * @param string $field
      * @param string $value
      *
+     * @throws \Exception
+     *
      * @return $this
      */
     public function assertInputValueIsNot($field, $value)
@@ -529,6 +568,8 @@ JS;
      * Get the value of the given input or text area field.
      *
      * @param string $field
+     *
+     * @throws \Exception
      *
      * @return string
      */
@@ -546,6 +587,9 @@ JS;
      *
      * @param string $field
      * @param string $value
+     *
+     * @throws \Exception
+     * @throws \PHPUnit_Framework_AssertionFailedError
      *
      * @return $this
      */
@@ -567,6 +611,9 @@ JS;
      * @param string $field
      * @param string $value
      *
+     * @throws \Exception
+     * @throws \PHPUnit_Framework_AssertionFailedError
+     *
      * @return $this
      */
     public function assertNotChecked($field, $value = null)
@@ -586,6 +633,9 @@ JS;
      *
      * @param string $field
      * @param string $value
+     *
+     * @throws \Exception
+     * @throws \PHPUnit_Framework_AssertionFailedError
      *
      * @return $this
      */
@@ -607,6 +657,9 @@ JS;
      * @param string $field
      * @param string $value
      *
+     * @throws \Exception
+     * @throws \PHPUnit_Framework_AssertionFailedError
+     *
      * @return $this
      */
     public function assertRadioNotSelected($field, $value = null)
@@ -627,6 +680,9 @@ JS;
      * @param string $field
      * @param string $value
      *
+     * @throws \Exception
+     * @throws \PHPUnit_Framework_AssertionFailedError
+     *
      * @return $this
      */
     public function assertSelected($field, $value)
@@ -645,6 +701,9 @@ JS;
      * @param string $field
      * @param string $value
      *
+     * @throws \Exception
+     * @throws \PHPUnit_Framework_AssertionFailedError
+     *
      * @return $this
      */
     public function assertNotSelected($field, $value)
@@ -661,7 +720,9 @@ JS;
      * Assert that the given array of values are available to be selected.
      *
      * @param string $field
-     * @param array  $values
+     * @param array $values
+     *
+     * @throws \Exception
      *
      * @return $this
      */
@@ -680,14 +741,17 @@ JS;
      * Assert that the given array of values are not available to be selected.
      *
      * @param string $field
-     * @param array  $values
+     * @param array $values
+     *
+     * @throws \Exception
      *
      * @return $this
      */
     public function assertSelectMissingOptions($field, array $values)
     {
         PHPUnit::assertCount(
-            0, $this->resolver->resolveSelectOptions($field, $values),
+            0,
+            $this->resolver->resolveSelectOptions($field, $values),
             'Unexpected options ['.implode(',', $values)."] for selection field [{$field}]."
         );
 
@@ -699,6 +763,8 @@ JS;
      *
      * @param string $field
      * @param string $value
+     *
+     * @throws \Exception
      *
      * @return $this
      */
@@ -713,6 +779,8 @@ JS;
      * @param string $field
      * @param string $value
      *
+     * @throws \Exception
+     *
      * @return $this
      */
     public function assertSelectMissingOption($field, $value)
@@ -725,6 +793,8 @@ JS;
      *
      * @param string $field
      * @param string $value
+     *
+     * @throws \Exception
      *
      * @return bool
      */
@@ -757,6 +827,8 @@ JS;
      *
      * @param string $selector
      *
+     * @throws \PHPUnit_Framework_AssertionFailedError
+     *
      * @return $this
      */
     public function assertVisible($selector)
@@ -776,6 +848,8 @@ JS;
      *
      * @param string $selector
      *
+     * @throws \PHPUnit_Framework_AssertionFailedError
+     *
      * @return $this
      */
     public function assertMissing($selector)
@@ -783,7 +857,7 @@ JS;
         $fullSelector = $this->resolver->format($selector);
 
         try {
-            $missing = !$this->resolver->findOrFail($selector)->isDisplayed();
+            $missing = ! $this->resolver->findOrFail($selector)->isDisplayed();
         } catch (NoSuchElementException $e) {
             $missing = true;
         }
@@ -803,7 +877,8 @@ JS;
     public function assertDialogOpened($message)
     {
         PHPUnit::assertEquals(
-            $message, $this->driver->switchTo()->alert()->getText()
+            $message,
+            $this->driver->switchTo()->alert()->getText()
         );
 
         return $this;

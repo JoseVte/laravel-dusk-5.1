@@ -44,6 +44,13 @@ class DuskCommand extends Command
     /**
      * Execute the console command.
      *
+     * @throws \Laravel\Dusk\Exception\InvalidPathException
+     * @throws \Laravel\Dusk\Exception\InvalidFileException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
+     * @throws \Symfony\Component\Process\Exception\LogicException
+     * @throws \InvalidArgumentException
+     *
      * @return mixed
      */
     public function handle()
@@ -86,6 +93,8 @@ class DuskCommand extends Command
     /**
      * Get the array of arguments for running PHPUnit.
      *
+     * @param $options
+     *
      * @return array
      */
     protected function phpunitArguments($options)
@@ -95,6 +104,8 @@ class DuskCommand extends Command
 
     /**
      * Purge the failure screenshots.
+     *
+     * @throws \InvalidArgumentException
      */
     protected function purgeScreenshots()
     {
@@ -109,6 +120,8 @@ class DuskCommand extends Command
 
     /**
      * Purge the console logs.
+     *
+     * @throws \InvalidArgumentException
      */
     protected function purgeConsoleLogs()
     {
@@ -125,6 +138,9 @@ class DuskCommand extends Command
      * Run the given callback with the Dusk configuration files.
      *
      * @param \Closure $callback
+     *
+     * @throws \Laravel\Dusk\Exception\InvalidPathException
+     * @throws \Laravel\Dusk\Exception\InvalidFileException
      *
      * @return mixed
      */
@@ -143,7 +159,7 @@ class DuskCommand extends Command
         return tap($callback(), function () {
             $this->removeConfiguration();
 
-            if (file_exists(base_path($this->duskFile())) && file_exists(base_path('.env.backup'))) {
+            if (file_exists(base_path('.env.backup')) && file_exists(base_path($this->duskFile()))) {
                 $this->restoreEnvironment();
             }
         });
@@ -171,6 +187,9 @@ class DuskCommand extends Command
 
     /**
      * Refresh the current environment variables.
+     *
+     * @throws \Laravel\Dusk\Exception\InvalidPathException
+     * @throws \Laravel\Dusk\Exception\InvalidFileException
      */
     protected function refreshEnvironment()
     {
@@ -182,8 +201,8 @@ class DuskCommand extends Command
      */
     protected function writeConfiguration()
     {
-        if (!file_exists($file = base_path('phpunit.dusk.xml'))) {
-            copy(realpath(__DIR__.'/../../stubs/phpunit.xml'), $file);
+        if (! file_exists($file = base_path('phpunit.dusk.xml'))) {
+            copy(dirname(dirname(__DIR__)) . '/stubs/phpunit.xml', $file);
         } else {
             $this->hasPhpUnitConfiguration = true;
         }
@@ -194,7 +213,7 @@ class DuskCommand extends Command
      */
     protected function removeConfiguration()
     {
-        if (!$this->hasPhpUnitConfiguration) {
+        if (! $this->hasPhpUnitConfiguration) {
             unlink(base_path('phpunit.dusk.xml'));
         }
     }

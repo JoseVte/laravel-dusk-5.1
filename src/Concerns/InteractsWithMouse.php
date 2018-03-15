@@ -2,6 +2,12 @@
 
 namespace Laravel\Dusk\Concerns;
 
+/**
+ * Trait InteractsWithMouse
+ *
+ * @property \Facebook\WebDriver\Remote\RemoteWebDriver driver
+ * @property \Laravel\Dusk\ElementResolver              resolver
+ */
 trait InteractsWithMouse
 {
     /**

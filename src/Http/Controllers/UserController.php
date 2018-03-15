@@ -17,7 +17,7 @@ class UserController
     {
         $user = Auth::guard($guard)->user();
 
-        if (!$user) {
+        if (! $user) {
             return [];
         }
 
@@ -43,7 +43,7 @@ class UserController
      * @param string $userId
      * @param string $guard
      *
-     * @return Response
+     * @return void
      */
     public function login($userId, $guard = null)
     {
@@ -65,7 +65,7 @@ class UserController
      *
      * @param string $guard
      *
-     * @return Response
+     * @return void
      */
     public function logout($guard = null)
     {

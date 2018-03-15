@@ -9,14 +9,22 @@ use Illuminate\Support\Str;
 use Facebook\WebDriver\Exception\TimeOutException;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 
+/**
+ * Trait WaitsForElements
+ *
+ * @property \Facebook\WebDriver\Remote\RemoteWebDriver driver
+ * @property \Laravel\Dusk\ElementResolver              resolver
+ */
 trait WaitsForElements
 {
     /**
      * Execute the given callback in a scoped browser once the selector is available.
      *
-     * @param string  $selector
+     * @param string $selector
      * @param Closure $callback
-     * @param int     $seconds
+     * @param int $seconds
+     *
+     * @throws \Facebook\WebDriver\Exception\TimeOutException
      *
      * @return $this
      */
@@ -29,7 +37,9 @@ trait WaitsForElements
      * Wait for the given selector to be visible.
      *
      * @param string $selector
-     * @param int    $seconds
+     * @param int $seconds
+     *
+     * @throws \Facebook\WebDriver\Exception\TimeOutException
      *
      * @return $this
      */
@@ -44,7 +54,9 @@ trait WaitsForElements
      * Wait for the given selector to be removed.
      *
      * @param string $selector
-     * @param int    $seconds
+     * @param int $seconds
+     *
+     * @throws \Facebook\WebDriver\Exception\TimeOutException
      *
      * @return $this
      */
@@ -52,7 +64,7 @@ trait WaitsForElements
     {
         return $this->waitUsing($seconds, 100, function () use ($selector) {
             try {
-                $missing = !$this->resolver->findOrFail($selector)->isDisplayed();
+                $missing = ! $this->resolver->findOrFail($selector)->isDisplayed();
             } catch (NoSuchElementException $e) {
                 $missing = true;
             }
@@ -65,7 +77,9 @@ trait WaitsForElements
      * Wait for the given text to be visible.
      *
      * @param string $text
-     * @param int    $seconds
+     * @param int $seconds
+     *
+     * @throws \Facebook\WebDriver\Exception\TimeOutException
      *
      * @return $this
      */
@@ -80,7 +94,9 @@ trait WaitsForElements
      * Wait for the given link to be visible.
      *
      * @param string $link
-     * @param int    $seconds
+     * @param int $seconds
+     *
+     * @throws \Facebook\WebDriver\Exception\TimeOutException
      *
      * @return $this
      */
@@ -95,7 +111,9 @@ trait WaitsForElements
      * Wait for the given location.
      *
      * @param string $path
-     * @param int    $seconds
+     * @param int $seconds
+     *
+     * @throws \Facebook\WebDriver\Exception\TimeOutException
      *
      * @return $this
      */
@@ -108,18 +126,20 @@ trait WaitsForElements
      * Wait until the given script returns true.
      *
      * @param string $script
-     * @param int    $seconds
+     * @param int $seconds
+     *
+     * @throws \Facebook\WebDriver\Exception\TimeOutException
      *
      * @return $this
      */
     public function waitUntil($script, $seconds = 5)
     {
-        if (!Str::startsWith($script, 'return ')) {
+        if (! Str::startsWith($script, 'return ')) {
             $script = 'return '.$script;
         }
 
-        if (!Str::endsWith($script, ';')) {
-            $script = $script.';';
+        if (! Str::endsWith($script, ';')) {
+            $script .= ';';
         }
 
         return $this->waitUsing($seconds, 100, function () use ($script) {
@@ -131,7 +151,9 @@ trait WaitsForElements
      * Wait for the current page to reload.
      *
      * @param Closure $callback
-     * @param int     $seconds
+     * @param int $seconds
+     *
+     * @throws \Facebook\WebDriver\Exception\TimeOutException
      *
      * @return $this
      */
@@ -158,9 +180,9 @@ trait WaitsForElements
      * @param Closure     $callback
      * @param string|null $message
      *
-     * @return $this
-     *
      * @throws TimeOutException
+     *
+     * @return $this
      */
     public function waitUsing($seconds, $interval, Closure $callback, $message = null)
     {

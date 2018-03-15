@@ -4,6 +4,12 @@ namespace Laravel\Dusk\Concerns;
 
 use DateTimeInterface;
 
+/**
+ * Trait InteractsWithCookies
+ *
+ * @property \Facebook\WebDriver\Remote\RemoteWebDriver driver
+ * @property \Laravel\Dusk\ElementResolver              resolver
+ */
 trait InteractsWithCookies
 {
     /**

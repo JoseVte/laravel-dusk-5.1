@@ -20,7 +20,7 @@ class Dotenv
     /**
      * The loader instance.
      *
-     * @var \Dotenv\Loader|null
+     * @var \Laravel\Dusk\Loader
      */
     protected $loader;
 
@@ -39,6 +39,9 @@ class Dotenv
     /**
      * Load environment file in given directory.
      *
+     * @throws \Laravel\Dusk\Exception\InvalidFileException
+     * @throws \Laravel\Dusk\Exception\InvalidPathException
+     *
      * @return array
      */
     public function load()
@@ -48,6 +51,9 @@ class Dotenv
 
     /**
      * Load environment file in given directory.
+     *
+     * @throws \Laravel\Dusk\Exception\InvalidFileException
+     * @throws \Laravel\Dusk\Exception\InvalidPathException
      *
      * @return array
      */
@@ -66,13 +72,11 @@ class Dotenv
      */
     protected function getFilePath($path, $file)
     {
-        if (!is_string($file)) {
+        if (! is_string($file)) {
             $file = '.env';
         }
 
-        $filePath = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
-
-        return $filePath;
+        return rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
     }
 
     /**
@@ -80,11 +84,14 @@ class Dotenv
      *
      * @param bool $overload
      *
+     * @throws \Laravel\Dusk\Exception\InvalidFileException
+     * @throws \Laravel\Dusk\Exception\InvalidPathException
+     *
      * @return array
      */
     protected function loadData($overload = false)
     {
-        $this->loader = new Loader($this->filePath, !$overload);
+        $this->loader = new Loader($this->filePath, ! $overload);
 
         return $this->loader->load();
     }
@@ -94,7 +101,10 @@ class Dotenv
      *
      * @param string|string[] $variable
      *
-     * @return \Dotenv\Validator
+     * @throws \Laravel\Dusk\Exception\ValidationException
+     * @throws \Laravel\Dusk\Exception\InvalidCallbackException
+     *
+     * @return \Laravel\Dusk\Validator
      */
     public function required($variable)
     {

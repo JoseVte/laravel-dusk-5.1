@@ -2,6 +2,12 @@
 
 namespace Laravel\Dusk\Concerns;
 
+/**
+ * Trait InteractsWithJavascript
+ *
+ * @property \Facebook\WebDriver\Remote\RemoteWebDriver driver
+ * @property \Laravel\Dusk\ElementResolver              resolver
+ */
 trait InteractsWithJavascript
 {
     /**

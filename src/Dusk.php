@@ -10,6 +10,8 @@ class Dusk
      * Register the Dusk service provider.
      *
      * @param array $options
+     *
+     * @throws \InvalidArgumentException
      */
     public static function register(array $options = [])
     {
@@ -23,11 +25,13 @@ class Dusk
      *
      * @param array $options
      *
+     * @throws \InvalidArgumentException
+     *
      * @return bool
      */
     protected static function duskEnvironment($options)
     {
-        if (!isset($options['environments'])) {
+        if (! isset($options['environments'])) {
             return false;
         }
 
@@ -35,7 +39,7 @@ class Dusk
             $options['environments'] = [$options['environments']];
         }
 
-        if (!is_array($options['environments'])) {
+        if (! is_array($options['environments'])) {
             throw new InvalidArgumentException('Dusk environments must be listed as an array.');
         }
 

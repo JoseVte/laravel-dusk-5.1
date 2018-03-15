@@ -35,15 +35,15 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        if (!is_dir(base_path('tests/Browser/Pages'))) {
+        if (! is_dir(base_path('tests/Browser/Pages'))) {
             mkdir(base_path('tests/Browser/Pages'), 0755, true);
         }
 
-        if (!is_dir(base_path('tests/Browser/screenshots'))) {
+        if (! is_dir(base_path('tests/Browser/screenshots'))) {
             $this->createScreenshotsDirectory();
         }
 
-        if (!is_dir(base_path('tests/Browser/console'))) {
+        if (! is_dir(base_path('tests/Browser/console'))) {
             $this->createConsoleDirectory();
         }
 
@@ -56,7 +56,7 @@ class InstallCommand extends Command
         ];
 
         foreach ($subs as $stub => $file) {
-            if (!is_file($file)) {
+            if (! is_file($file)) {
                 copy(__DIR__.'/../../stubs/'.$stub, $file);
             }
         }

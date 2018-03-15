@@ -29,8 +29,11 @@ class Validator
     /**
      * Create a new validator instance.
      *
-     * @param array                $variables
+     * @param array $variables
      * @param \Laravel\Dusk\Loader $loader
+     *
+     * @throws \Laravel\Dusk\Exception\ValidationException
+     * @throws \Laravel\Dusk\Exception\InvalidCallbackException
      */
     public function __construct(array $variables, Loader $loader)
     {
@@ -48,6 +51,9 @@ class Validator
     /**
      * Assert that each variable is not empty.
      *
+     * @throws \Laravel\Dusk\Exception\ValidationException
+     * @throws \Laravel\Dusk\Exception\InvalidCallbackException
+     *
      * @return \Laravel\Dusk\Validator
      */
     public function notEmpty()
@@ -62,6 +68,9 @@ class Validator
 
     /**
      * Assert that each specified variable is an integer.
+     *
+     * @throws \Laravel\Dusk\Exception\ValidationException
+     * @throws \Laravel\Dusk\Exception\InvalidCallbackException
      *
      * @return \Laravel\Dusk\Validator
      */
@@ -79,6 +88,9 @@ class Validator
      * Assert that each variable is amongst the given choices.
      *
      * @param string[] $choices
+     *
+     * @throws \Laravel\Dusk\Exception\ValidationException
+     * @throws \Laravel\Dusk\Exception\InvalidCallbackException
      *
      * @return \Laravel\Dusk\Validator
      */
@@ -104,11 +116,11 @@ class Validator
      */
     protected function assertCallback($callback, $message = 'failed callback assertion')
     {
-        if (!is_callable($callback)) {
+        if (! is_callable($callback)) {
             throw new InvalidCallbackException('The provided callback must be callable.');
         }
 
-        $variablesFailingAssertion = array();
+        $variablesFailingAssertion = [];
         foreach ($this->variables as $variableName) {
             $variableValue = $this->loader->getEnvironmentVariable($variableName);
             if (call_user_func($callback, $variableValue) === false) {

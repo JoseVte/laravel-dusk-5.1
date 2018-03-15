@@ -63,6 +63,8 @@ trait InteractsWithAuthentication
      *
      * @param string|null $guard
      *
+     * @throws \PHPUnit_Framework_AssertionFailedError
+     *
      * @return $this
      */
     public function assertAuthenticated($guard = null)
@@ -77,12 +79,15 @@ trait InteractsWithAuthentication
      *
      * @param string|null $guard
      *
+     * @throws \PHPUnit_Framework_AssertionFailedError
+     *
      * @return $this
      */
     public function assertGuest($guard = null)
     {
         PHPUnit::assertEmpty(
-            $this->currentUserInfo($guard), 'The user is unexpectedly authenticated.'
+            $this->currentUserInfo($guard),
+            'The user is unexpectedly authenticated.'
         );
 
         return $this;
@@ -104,7 +109,8 @@ trait InteractsWithAuthentication
         ];
 
         PHPUnit::assertSame(
-            $expected, $this->currentUserInfo($guard),
+            $expected,
+            $this->currentUserInfo($guard),
             'The currently authenticated user is not who was expected.'
         );
 

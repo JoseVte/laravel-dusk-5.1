@@ -105,7 +105,7 @@ class Browser
         // If the URL does not start with http or https, then we will prepend the base
         // URL onto the URL and navigate to the URL. This will actually navigate to
         // the URL in the browser. Then we will be ready to make assertions, etc.
-        if (!Str::startsWith($url, ['http://', 'https://'])) {
+        if (! Str::startsWith($url, ['http://', 'https://'])) {
             $url = static::$baseUrl.'/'.ltrim($url, '/');
         }
 
@@ -235,7 +235,7 @@ class Browser
     {
         $console = $this->driver->manage()->getLog('browser');
 
-        if (!empty($console)) {
+        if (! empty($console)) {
             file_put_contents(sprintf('%s/%s.log', rtrim(static::$storeConsoleLogAt, '/'), $name), json_encode($console, JSON_PRETTY_PRINT));
         }
 
@@ -389,7 +389,9 @@ class Browser
      * Dynamically call a method on the browser.
      *
      * @param string $method
-     * @param array  $parameters
+     * @param array $parameters
+     *
+     * @throws \BadMethodCallException
      *
      * @return mixed
      */

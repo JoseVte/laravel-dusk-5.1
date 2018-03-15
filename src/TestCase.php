@@ -31,6 +31,8 @@ abstract class TestCase extends FoundationTestCase
 
     /**
      * Register the base URL with Dusk.
+     *
+     * @throws \Exception
      */
     public function setUp()
     {
@@ -76,10 +78,10 @@ abstract class TestCase extends FoundationTestCase
      *
      * @param \Closure $callback
      *
-     * @return \Laravel\Dusk\Browser|void
-     *
      * @throws \Exception
      * @throws \Throwable
+     *
+     * @return \Laravel\Dusk\Browser|void
      */
     public function browse(Closure $callback)
     {
@@ -106,6 +108,12 @@ abstract class TestCase extends FoundationTestCase
      * Create the browser instances needed for the given callback.
      *
      * @param \Closure $callback
+     *
+     * @throws \ReflectionException
+     * @throws \Exception
+     * @throws \Exception
+     * @throws \ReflectionException
+     * @throws \Exception
      *
      * @return array
      */
@@ -140,6 +148,8 @@ abstract class TestCase extends FoundationTestCase
      * Get the number of browsers needed for a given callback.
      *
      * @param \Closure $callback
+     *
+     * @throws \ReflectionException
      *
      * @return int
      */
@@ -203,6 +213,8 @@ abstract class TestCase extends FoundationTestCase
     /**
      * Create the remote web driver instance.
      *
+     * @throws \Exception
+     *
      * @return \Facebook\WebDriver\Remote\RemoteWebDriver
      */
     protected function createWebDriver()
@@ -226,6 +238,8 @@ abstract class TestCase extends FoundationTestCase
      * Determine the application's base URL.
      *
      * @var string
+     *
+     * @return mixed
      */
     protected function baseUrl()
     {
@@ -235,9 +249,9 @@ abstract class TestCase extends FoundationTestCase
     /**
      * Get a callback that returns the default user to authenticate.
      *
-     * @return \Closure
-     *
      * @throws \Exception
+     *
+     * @return void
      */
     protected function user()
     {
