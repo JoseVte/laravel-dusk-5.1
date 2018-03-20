@@ -28,8 +28,20 @@ abstract class DuskTestCase extends BaseTestCase
      */
     protected function driver()
     {
-        return RemoteWebDriver::create(
-            'http://localhost:9515', DesiredCapabilities::chrome(), 5000, 10000
-        );
+        $port = config('dusk.port');
+        $connection = config('dusk.timeout.connection');
+        $request = config('dusk.timeout.request');
+
+        $options = (new ChromeOptions)->addArguments([
+            '--disable-gpu',
+            'start-maximized',
+        ]);
+
+        if (!config('dusk.show-window')) {
+            $options->addArguments(['--headless']);
+        }
+
+
+        return RemoteWebDriver::create('http://localhost:'.$port, DesiredCapabilities::chrome()->setCapability(ChromeOptions::CAPABILITY, $options), $connection, $request);
     }
 }

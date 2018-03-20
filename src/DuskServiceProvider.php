@@ -27,6 +27,10 @@ class DuskServiceProvider extends ServiceProvider
             'middleware' => 'web',
             'uses' => 'Laravel\Dusk\Http\Controllers\UserController@user',
         ]);
+
+        $this->publishes([
+            __DIR__.'/../config/dusk.php' => config_path('dusk.php'),
+        ], 'config');
     }
 
     /**
@@ -36,6 +40,8 @@ class DuskServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(__DIR__.'/../config/dusk.php', 'dusk');
+
         if ($this->app->environment('production')) {
             throw new Exception('It is unsafe to run Dusk in production.');
         }
@@ -44,6 +50,7 @@ class DuskServiceProvider extends ServiceProvider
             $this->commands([
                 Console\InstallCommand::class,
                 Console\DuskCommand::class,
+                Console\DuskServeCommand::class,
                 Console\MakeCommand::class,
                 Console\PageCommand::class,
             ]);

@@ -386,6 +386,20 @@ class Browser
     }
 
     /**
+     * Scroll the browser to the jQuery selector
+     *
+     * @param string $selector
+     *
+     * @return $this
+     */
+    public function scrollTo($selector)
+    {
+        $this->driver->executeScript("$(\"html, body\").animate({scrollTop: $(\"$selector\").offset().top}, 0);");
+
+        return $this;
+    }
+
+    /**
      * Dynamically call a method on the browser.
      *
      * @param string $method

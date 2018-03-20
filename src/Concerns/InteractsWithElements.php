@@ -2,6 +2,7 @@
 
 namespace Laravel\Dusk\Concerns;
 
+use Exception;
 use Illuminate\Support\Str;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
@@ -95,7 +96,7 @@ trait InteractsWithElements
      * @param string      $selector
      * @param string|null $value
      *
-     * @return $this
+     * @return $this|string
      */
     public function value($selector, $value = null)
     {
@@ -187,6 +188,33 @@ trait InteractsWithElements
     public function type($field, $value)
     {
         $this->resolver->resolveForTyping($field)->clear()->sendKeys($value);
+
+        return $this;
+    }
+
+    /**
+     * Set the content in a wysiwyg editor
+     *
+     * @param string $type
+     * @param string $id  ID of wysiwyg, without jQuery format
+     * @param string $value
+     *
+     * @throws \Exception
+     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     *
+     * @return $this
+     */
+    public function wysiwyg($type, $id, $value)
+    {
+        switch ($type) {
+            case 'tinymce':
+                $this->waitFor('#'.$id.'_ifr');
+                $value = str_replace(['"', '\''], ['&quot;', '&#039'], $value);
+                $this->driver->executeScript("tinyMCE.get('$id').setContent('$value');");
+                break;
+            default:
+                throw new Exception('Unsupported wysiwyg');
+        }
 
         return $this;
     }

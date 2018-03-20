@@ -52,7 +52,7 @@ if ($this->app->environment('local')) {
 
 After installing the Dusk package, run the `dusk:install` Artisan command:
 
-```sh
+```bash
 php artisan dusk:install
 ```
 
@@ -60,21 +60,37 @@ A `Browser` directory will be created within your `tests` directory and will con
 
 To run your tests, use the `dusk` Artisan command. The `dusk` command accepts any argument that is also accepted by the `phpunit` command:
 
-```sh
+```bash
 php artisan dusk
 ```
+
+## Configuration
+
+By default dusk use the port 9515 and have a timeout of 20 seconds.
+
+If you need change the configuration the dusk port and/or timeout, it is needed to publish the config file:
+
+```bash
+php artisan vendor:publish --provider="Laravel\Dusk\DuskServiceProvider" --tag="config"
+```
+
+To make the changes by *environment variables**, add the fields in the **dusk env file**.
 
 ## Extra methods
 
 | Method | Definition |
 | ------ | ---------- |
-| switchFrame | (type of selector, value of selector) |
-| select2 | (selector, value(s), wait in seconds) |
-| selectBySelector | (selector css, value of selector) |
-| assertFragmentIs | (value of fragment) |
-| assertQueryIs | (value of query) |
+| [switchFrame](#switchFrame) | (type of selector, value of selector) |
+| [select2](select2) | (selector, value(s), wait in seconds) |
+| [selectBySelector](selectBySelector) | (selector css, value of selector) |
+| [assertFragmentIs](assertFragmentIs) | (value of fragment) |
+| [assertQueryIs](assertQueryIs) | (value of query) |
+| [scrollTo](scrollTo) | (selector jQuery) |
+| [wysiwyg](wysiwyg) | (type of wysiwyg: tinymce, ID of wysiwyg, value) |
 
-### Example
+### Examples
+
+#### switchFrame
 
 Example of payment with paypal using the `switchFrame` method:
 
@@ -106,7 +122,9 @@ $browser->loginAs($user)
     ;
 ```
 
-Example of select2 uses:
+#### select2
+
+Example of `select2` uses:
 
 * For default select2. If value not passed, it be selected automatically:
 
@@ -137,13 +155,17 @@ $browse->select2('@selector', ['foo', 'bar'], 5);
 $browse->select2('.select2-users + .select2', 'you_text_value');
 ```
 
-Example of selectBySelector uses:
+#### selectBySelector
+
+Example of `selectBySelector` uses:
 
 ```php
 $browse->selectBySelector('select.my-custom-selector', 'value');
 ```
 
-Example of assertFragmentIs uses:
+#### assertFragmentIs
+
+Example of `assertFragmentIs` uses:
 
 ```php
 $browser->visit('http://laravel.com/#/login')
@@ -151,12 +173,32 @@ $browser->visit('http://laravel.com/#/login')
         ->assertFragmentIs('/login');
 ```
 
-Example of assertQueryIs uses:
+#### assertQueryIs
+
+Example of `assertQueryIs` uses:
 
 ```php
 $browser->visit('http://laravel.com?key=test')
         ->assertPathIs('/')
         ->assertQueryIs('key=test');
+```
+
+#### scrollTo
+
+Example of `scrollTo` uses:
+
+```php
+$browser->visit('http://laravel.com')
+        ->scrollTo('#cookie-id')
+        ->click('#cookie-id');
+```
+#### wysiwyg
+
+Example of `wysiwyg` uses:
+
+```php
+$browser->visit('http://laravel.com')
+        ->wysiwyg('tinymce', 'form-id', '<h2>value</h2>');
 ```
 
 ## License
